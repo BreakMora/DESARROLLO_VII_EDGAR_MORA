@@ -2,13 +2,13 @@
     $nombre = "Edgar";
     $edad = 25;
     
-    $presentacion = "Hola, mi nombre es ". $nombre . " y tengo " . $edad . " años.";
-    $presentacion2 = "Hola, mi nombre es $nombre y tengo $edad años";
+    echo "Hola, mundo! <br>";
+    echo "Mi nombre es $nombre";
 
-    define("SALUDO", "¡Bienvenido!");
-    $mensaje = SALUDO . " " . $nombre;
+    print "Tengo $edad años <br>";
 
-    echo $presentacion . "<br>";
-    echo $presentacion2 . "<br>";
-    echo $mensaje ."<br>";
+    printf("Me llamo %s y tengo %d años <br>", $nombre, $edad);
+
+    var_dump($nombre);
+    echo "<br>";
 ?>
