@@ -1,11 +1,14 @@
 <?php
     $nombre = "Edgar";
     $edad = 25;
-    $altura = 1.75;
-    $esEstudiante = true;
+    
+    $presentacion = "Hola, mi nombre es ". $nombre . " y tengo " . $edad . " años.";
+    $presentacion2 = "Hola, mi nombre es $nombre y tengo $edad años";
 
-    echo "Nombre: $nombre <br>";
-    echo "Edad: $edad <br>";
-    echo "Altura: $altura <br>";
-    echo "¿Es estudiante? " . ($esEstudiante ? "Si" : "No");
+    define("SALUDO", "¡Bienvenido!");
+    $mensaje = SALUDO . " " . $nombre;
+
+    echo $presentacion . "<br>";
+    echo $presentacion2 . "<br>";
+    echo $mensaje ."<br>";
 ?>
