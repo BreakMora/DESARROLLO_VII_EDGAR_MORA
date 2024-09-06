@@ -6,13 +6,13 @@
 
     function contar_vocales($texto){
         $vocales = ['a','e','i','o','u'];
-        $contador = "en progreso";
-        /*$caracteres = str_split($texto);
+        $contador = 0;
+        $caracteres = str_split($texto);
         foreach ($caracteres as $caracter) {
             if (in_array($caracter, $vocales)) {
                 $contador++;
             }
-        }*/
+        }
         return $contador;
     }
 
