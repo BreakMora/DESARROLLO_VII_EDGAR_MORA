@@ -10,6 +10,30 @@ class Libro {
         $this->anioPublicacion = $anioPublicacion;
     }
 
+    public function getTitulo() {
+        return $this->titulo;
+    }
+
+    public function setTitulo($titulo) {
+        $this->titulo = trim($titulo);
+    }
+
+    public function getAutor() {
+        return $this->autor;
+    }
+
+    public function setAutor($autor) {
+        $this->autor = trim($autor);
+    }
+
+    public function getAnioPublicacion() {
+        return $this->anioPublicacion;
+    }
+
+    public function setAnioPublicacion($anio) {
+        $this->anioPublicacion = intval($anio);
+    }
+
     public function obtenerInformacion() {
         return "'{$this->titulo}' por {$this->autor}, publicado en {$this->anioPublicacion}";
     }
@@ -18,3 +42,4 @@ class Libro {
 // Ejemplo de uso
 $miLibro = new Libro("Cien años de soledad", "Gabriel García Márquez", 1967);
 echo $miLibro->obtenerInformacion();
+echo "<br>Título: " . $miLibro->getTitulo();
