@@ -1,103 +1,110 @@
 <?php
-require_once ("prestable.php");
-
-$estadosLegibles = [
-    "estado" => ["disponible"=>"Disponible", "prestado"=> "Prestado", "en_preparacion"=> "En Preparación"]
-];
-abstract class RecursoBiblioteca implements prestable{
+abstract class Entrada {
     public $id;
-    public $titulo;
-    public $autor;
-    public $anioPublicacion;
-    public $estado;
-    public $fechaAdquisicion;
+    public $fecha_creacion;
     public $tipo;
+    public $titulo;
+    public $descripcion;
 
-
-    public function __construct($datos) {
+    public function __construct($datos = []) {
         foreach ($datos as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->$key = $value;
             }
         }
     }
-
-    public function obtenerDetallesPrestamo(){
-        return $detallesPrestamo="";
-    }
-
 }
 
-// Implementar las clases Libro, Revista y DVD aquí
-class Libro extends RecursoBiblioteca implements prestable{
-    public $isbn;
-
-    public function __construct($datos, $isbn) {
-        parent::__construct($datos);
-        $this->isbn = $isbn;
-    }
-
-    public function obtenerDetallesPrestamo(){
-        return $detallesPrestamo="";
-    }
+interface Detalle {
+    public function obtenerDetallesEspecificos(): string;
 }
 
-class Revista extends RecursoBiblioteca implements prestable{
-    public $numeroEdicion;
-    public function __construct($datos, $numeroEdicion) {
-        parent::__construct($datos);
-        $this->numeroEdicion = $numeroEdicion;
-    }
+class EntradaUnaColumna extends Entrada implements Detalle{
+    public $titulo;
+    public $descripcion;
     
-    public function obtenerDetallesPrestamo(){
-        return $detallesPrestamo="";
+    public function __construct(int $id, string $fecha_creacion, string $titulo, string $descripcion) {
+        parent::__construct($id, $fecha_creacion, 1);
+        $this->titulo = $titulo;
+        $this->descripcion = $descripcion;
+    }
+
+    public function obtenerDetallesEspecificos(): string {
+        return "Entrada de una columna: " . $this->titulo;
     }
 }
 
-class DVD extends RecursoBiblioteca implements prestable{
-    public $duracion;
-    public function __construct($datos, $duracion) {
-        parent::__construct($datos);
-        $this->duracion = $duracion;
+class EntradaDosColumnas extends Entrada{
+    public $titulo1;
+    public $descripcion1;
+    public $titulo2;
+    public $descripcion2;
+
+    public function __construct(int $id, string $fecha_creacion, string $titulo1, string $descripcion1, string $titulo2, string $descripcion2) {
+        parent::__construct($id, $fecha_creacion, 2);
+        $this->titulo1 = $titulo1;
+        $this->descripcion1 = $descripcion1;
+        $this->titulo2 = $titulo2;
+        $this->descripcion2 = $descripcion2;
     }
 
-    public function obtenerDetallesPrestamo(){
-        return $detallesPrestamo="";
+    public function obtenerDetallesEspecificos(): string {
+        return "Entrada de tres columnas: " . $this->titulo1 . " | " . $this->titulo2; 
     }
 }
 
-class GestorBiblioteca extends RecursoBiblioteca {
-    private $recursos = [];
+class EntradaTresColumnas extends Entrada {
+    public $titulo1;
+    public $descripcion1;
+    public $titulo2;
+    public $descripcion2;
+    public $titulo3;
+    public $descripcion3;
 
-    public function cargarRecursos() {
-        $json = file_get_contents('biblioteca.json');
-        $data = json_decode($json, true);
-        
-        foreach ($data as $recursoData) {
+    public function __construct(int $id, string $fecha_creacion, string $titulo1, string $descripcion1, string $titulo2, string $descripcion2, string $titulo3, string $descripcion3) {
+        parent::__construct($id, $fecha_creacion, 2);
+        $this->titulo1 = $titulo1;
+        $this->descripcion1 = $descripcion1;
+        $this->titulo2 = $titulo2;
+        $this->descripcion2 = $descripcion2;
+        $this->titulo2 = $titulo3;
+        $this->descripcion2 = $descripcion3;
+    }
 
-            if (!isset($recursoData['tipo'])) {
-                continue;
+    public function obtenerDetallesEspecificos(): string {
+        return "Entrada de tres columnas: " . $this->titulo1 . " | " . $this->titulo2 . " | " . $this->titulo3;
+    }
+}
+
+class GestorBlog {
+    private $entradas = [];
+
+    public function cargarEntradas() {
+        if (file_exists('blog.json')) {
+            $json = file_get_contents('blog.json');
+            $data = json_decode($json, true);
+            foreach ($data as $entradaData) {
+                $this->entradas[] = new Entrada($entradaData);
             }
+        }
+    }
 
-            switch ($recursoData['tipo']) {
-                case 'Libro':
-                    $recurso = new Libro($recursoData, $recursoData['isbn']);
-                    break;
-                case 'Revista':
-                    $recurso = new Revista($recursoData, $recursoData['numeroEdicion']);
-                    break;
-                case 'DVD':
-                    $recurso = new DVD($recursoData, $recursoData['duracion']);
-                    break;
-                default:
-                    continue;
-            }
-        return $this->recursos;
-                                           
+    public function guardarEntradas() {
+        $data = array_map(function($entrada) {
+            return get_object_vars($entrada);
+        }, $this->entradas);
+        file_put_contents('blog.json', json_encode($data, JSON_PRETTY_PRINT));
+    }
 
-                }
+    public function entradaEditar($id){
+        return null;
+    }
+
+    public function eliminarEntrada($id) {
+        unset($this->entradas[$id]);
+    }
+
+    public function obtenerEntradas(){
+        return $this->entradas;
     }
 }
-
-    
-    // Implementar los demás métodos aquí
