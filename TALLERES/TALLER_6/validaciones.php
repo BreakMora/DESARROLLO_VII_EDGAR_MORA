@@ -7,11 +7,12 @@ function validarEmail($email) {
     return filter_var($email, FILTER_VALIDATE_EMAIL);
 }
 
-function validarEdad($edad) {
-    return is_numeric($edad) && $edad >= 18 && $edad <= 120;
+function validarFechaNacimiento($fechaNac) {
+    $fechaNacimiento = strtotime($fechaNac);
+    return $fechaNacimiento && checkdate( date('d', $fechaNacimiento), date('m', $fechaNacimiento), date('Y', $fechaNacimiento));
 }
 
-function validarSitioWeb($sitioWeb) {
+function validarSitio_web($sitioWeb) {
     return empty($sitioWeb) || filter_var($sitioWeb, FILTER_VALIDATE_URL);
 }
 
@@ -42,6 +43,12 @@ function validarFotoPerfil($archivo) {
     }
 
     if ($archivo['size'] > $tamanoMaximo) {
+        return false;
+    }
+
+    $nombreArchivo = basename($archivo['name']);
+
+    if (file_exists($nombreArchivo)) {
         return false;
     }
 
