@@ -8,4 +8,6 @@ $_SESSION = array();
 session_destroy();
 
 echo "Has cerrado sesión.";
+
+header('Location: productos.php');
 ?>

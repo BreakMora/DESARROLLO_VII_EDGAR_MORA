@@ -5,10 +5,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die("Error de validación CSRF");
     }
+
+    session_start();
+
+    // Si ya hay una sesión activa, redirigir al panel
+    if(isset($_SESSION['usuario'])) {
+        header("Location: panel.php");
+        exit();
+    }
+
     // Procesar el formulario cuando se envía
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $usuario = $_POST['usuario'];
-    $contrasena = $_POST['contrasena'];
+        $usuario = $_POST['usuario'];
+        $contrasena = $_POST['contrasena'];
 
         // En un caso real, verificaríamos contra una base de datos
         if($usuario === "admin" && $contrasena === "1234") {
@@ -18,11 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $error = "Usuario o contraseña incorrectos";
         }
-
     }
 }
-// Generar token CSRF
-$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 ?>
 
 <!DOCTYPE html>
